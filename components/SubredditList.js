@@ -10,12 +10,18 @@ import {
     ListView,
     Picker,
     ToastAndroid,
-    ActivityIndicator
+    ScrollView,
+    ActivityIndicator,
+    FlatList
 } from 'react-native';
 
 class SubredditList extends Component {
     componentDidMount() {
         this.props.fetchData('http://www.reddit.com/subreddits/default.json');
+    }
+
+    subredditSelected(url) {
+        this.props.subredditChanged(url);
     }
 
     render() {
@@ -34,30 +40,47 @@ class SubredditList extends Component {
         }
 
         return (
-            <Picker
-                mode="dropdown"
-                style={{
-                    color: '#CCCCCC',
-                    borderColor: '#F07B13',
-                    borderWidth: 0,
-                    borderBottomWidth: 1,
-                }}
-                selectedValue={this.props.isLoading ? 'Loading...' : this.props.selectedSubreddit}
-                onValueChange={this.props.subredditChanged}
-            >
+            <View>
+
+                <FlatList
+                    data={this.props.items}
+                    renderItem={({ item }) => (
+                        <Text style={styles.picker_item} key={item.id} onPress={() => this.subredditSelected(item.url)} title={item.display_name} value={item.url}>
+                            {item.display_name}
+                        </Text>
+                    )}
+                />
+            </View>
+        );
+        
+        return (
+            <ScrollView
+                ref={(ref) => this._drawer = ref}
+                style={styles.picker}>
                 {
                     this.props.items.map((item, idx) => (
-                        <Picker.Item key={item.url} label={item.display_name} value={item.url}>
-                        </Picker.Item>
+                        <Button style={styles.picker_item} key={item.url} onPress={() => this.subredditSelected(item.url)} title={item.display_name} value={item.url}>
+                            {item.display_name}
+                        </Button>
                     ))
                 }
-            </Picker >
+            </ScrollView>
         );
     }
 }
 
 const mapStateToProps = (state) => {
     console.log("STATE", state);
+    let placeholder_post = {
+        id: 0,
+        url: null,
+        display_name: '',
+    };
+    let placeholders = [];
+    for (let i = 0; i < 10; i++) {
+        placeholder_post.id = i;
+        placeholders.push(placeholder_post);
+    }
     return {
         items: state.subreddits || [],
         hasErrored: state.subredditListHasErrored,
@@ -87,6 +110,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         padding: 8,
     },
+    picker: {
+        color: '#CCCCCC',
+        borderColor: '#F07B13',
+        borderWidth: 0,
+        borderBottomWidth: 1,
+    },
+    picker_item: {
+        color: '#CCCCCC',
+        marginBottom: 30
+    }
 });
 
 

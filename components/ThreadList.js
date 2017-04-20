@@ -31,6 +31,11 @@ class ThreadList extends Component {
                 paddingBottom: 30,
                 fontWeight: 'bold'
             },
+            thread_entry_header: {
+                color: '#CCCCCC',
+                paddingBottom: 5,
+                fontWeight: 'bold'
+            },
             thread_entry_meta: {
                 color: '#CCCCCC',
                 paddingLeft: 15,
@@ -68,36 +73,47 @@ class ThreadList extends Component {
             return <Text>Sorry! There was an error loading the subreddits</Text>;
         }
 
-        if (this.props.isLoading) {
-            return (
-                <ActivityIndicator
-                    animating={true}
-                    style={[this.style.centering, { height: 80 }]}
-                    size="large"
-                />
-            );
-        }
+        // if (this.props.isLoading) {
+        //     return (
+        //         <ActivityIndicator
+        //             animating={true}
+        //             style={[this.style.centering, { height: 80 }]}
+        //             size="large"
+        //         />
+        //     );
+        // }
 
         return (
-            <ListView
-                dataSource={this.props.dataSource}
-                renderRow={(rowData) => (
-                    <View
-                        style={this.style.thread_entry}
-                    >
-                        <Text
-                            style={this.style.thread_entry_title}
-                        >
-                            {rowData.title}
-                        </Text>
-                        <Text
-                            style={this.style.thread_entry_meta}
-                        >
-                            {rowData.id}
-                        </Text>
-                    </View>
+            <View>
+                {this.props.isLoading && (
+                    <ActivityIndicator
+                        animating={true}
+                        style={[styles.centering, { height: 80 }]}
+                        size="large"
+                    />
                 )}
-            />
+                <ListView
+                    dataSource={this.props.dataSource}
+                    renderRow={(rowData) => (
+                        <View
+                            style={this.style.thread_entry}>
+                            <Text
+                                style={this.style.thread_entry_header} Ï>
+                                Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.domain}</Text>
+                            </Text>
+                            <Text
+                                style={this.style.thread_entry_title}>
+                                {rowData.title}
+                            </Text>
+                            <Text
+                                style={this.style.thread_entry_meta} Ï>
+                                {console.log(rowData)}
+                                {rowData.num_comments} comments
+                        </Text>
+                        </View>
+                    )}
+                />
+            </View>
         );
     }
 }

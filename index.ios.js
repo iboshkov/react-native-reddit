@@ -9,24 +9,36 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Button,
+  ListView,
+  Picker
 } from 'react-native';
+import axios from 'axios';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import SubredditList from './components/SubredditList';
+import ThreadList from './components/ThreadList';
+import rootReducer from './reducers';
+import thunk from 'redux-thunk';
+import Sidebar from 'react-native-sidebar';
+const SideMenu = require('react-native-side-menu');
+import { connect } from 'react-redux';
+import App from './components/App';
+
+let store = createStore(rootReducer, applyMiddleware(thunk));
+
 
 export default class AwesomeProject extends Component {
+  constructor() {
+    super();
+  }
   render() {
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+      <Provider store={store}>
+        <App />
+      </Provider>
     );
   }
 }
@@ -48,6 +60,7 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+
 });
 
 AppRegistry.registerComponent('AwesomeProject', () => AwesomeProject);
