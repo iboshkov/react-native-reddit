@@ -12,6 +12,7 @@ import {
     ToastAndroid,
     ActivityIndicator,
     Dimensions,
+    RefreshControl,
     Animated,
     Slider
 
@@ -34,7 +35,8 @@ class App extends Component {
         this._deltaX = new Animated.Value(0);
         this.state = {
             damping: 1 - 0.7,
-            tension: 300
+            tension: 300,
+            refreshing: false,
         };
     }
 
@@ -45,7 +47,12 @@ class App extends Component {
         console.log("App", this.props.selectedSubreddit);
     }
 
+    _onRefresh() {
+        this.setState({ refreshing: true });
+        this.props.threadListReload(this.props.selectedSubreddit);
+    }
     componentWillReceiveProps(newProps) {
+        this.setState({ refreshing: newProps.isLoading })
         if (this.props.selectedSubreddit !== newProps.selectedSubreddit) {
             this.closeDrawer();
         }
@@ -79,7 +86,13 @@ class App extends Component {
                         ref={(ref) => { this.drawer = ref; }}
                         content={<Sidebar navigator={this.navigator} />}
                     >
-                        <Content>
+                        <Content
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={this.props.isLoading}
+                                    onRefresh={this._onRefresh.bind(this)}
+                                />}
+                        >
 
                             <ThreadList />
                         </Content>

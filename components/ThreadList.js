@@ -9,7 +9,9 @@ import {
     ListView,
     Picker,
     ToastAndroid,
-    ActivityIndicator
+    RefreshControl,
+    ActivityIndicator,
+    ScrollView
 } from 'react-native';
 import { Container, Content, Card, CardItem, Text, Body } from 'native-base';
 import Interactable from 'react-native-interactable';
@@ -50,6 +52,7 @@ class ThreadList extends Component {
                 padding: 8,
             },
         });
+
     }
 
 
@@ -60,12 +63,13 @@ class ThreadList extends Component {
     }
 
     componentWillReceiveProps(props) {
+        this.setState({ refreshing: props.isLoading });
+
     }
 
     onDrawerSnap() {
         console.log("Snap");
     }
-
 
     render() {
         if (this.props.hasErrored) {
@@ -82,86 +86,50 @@ class ThreadList extends Component {
         //     );
         // }
 
+        let a = [];
+        for (let i = 0; i < 100; i++) {
+            a.push({});
+        }
+
         return (
             <View
                 style={this.style.thread_view_background}
             >
-                {this.props.isLoading ? (
-                    <ActivityIndicator
-                        animating={true}
-                        style={[this.style.centering, { height: 80 }]}
-                        size="large"
-                    />
-                ) : (
-                        <ListView
-                            dataSource={this.props.dataSource}
-                            renderRow={(rowData) => (
-                                <Interactable.View
-                                    horizontalOnly={true}
-                                    snapPoints={[{ x: 0 }, { x: -200 }]}
-                                    onSnap={this.onDrawerSnap}>
 
-                                    <Card>
-                                        <CardItem header>
-                                            <Text
-                                                style={this.style.thread_entry_header}>
-                                                Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.subreddit_name_prefixed}</Text>
-                                            </Text>
-                                        </CardItem>
-
-                                        <CardItem>
-                                            <Body>
-
-                                                <Text
-                                                    style={this.style.thread_entry_title}>
-                                                    {rowData.title}
-                                                </Text>
-
-                                            </Body>
-                                        </CardItem>
-                                        <CardItem header>
-                                            <Text
-                                                style={this.style.thread_entry_meta}>
-                                                {rowData.num_comments} comments
-                                    </Text>
-                                        </CardItem>
-                                    </Card>
-                                </Interactable.View>
-                            )}
-                        />
-                    )}
-            </View>
-        );
-        return (
-            <View
-                style={this.style.thread_view_background}
-            >
-                {this.props.isLoading && (
-                    <ActivityIndicator
-                        animating={true}
-                        style={[this.style.centering, { height: 80 }]}
-                        size="large"
-                    />
-                )}
                 <ListView
                     dataSource={this.props.dataSource}
                     renderRow={(rowData) => (
-                        <View
-                            style={this.style.thread_entry}>
-                            <Text
-                                style={this.style.thread_entry_header}>
-                                Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.domain}</Text>
-                            </Text>
-                            <Text
-                                style={this.style.thread_entry_title}>
-                                {rowData.title}
-                            </Text>
-                            <Text
-                                style={this.style.thread_entry_meta}>
-                                {console.log(rowData)}
-                                {rowData.num_comments} comments
-                        </Text>
-                        </View>
+                        <Interactable.View
+                            horizontalOnly={true}
+                            snapPoints={[{ x: 0 }, { x: -200 }]}
+                            onSnap={this.onDrawerSnap}>
+
+                            <Card>
+                                <CardItem header>
+                                    <Text
+                                        style={this.style.thread_entry_header}>
+                                        Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.subreddit_name_prefixed}</Text>
+                                    </Text>
+                                </CardItem>
+
+                                <CardItem>
+                                    <Body>
+
+                                        <Text
+                                            style={this.style.thread_entry_title}>
+                                            {rowData.title}
+                                        </Text>
+
+                                    </Body>
+                                </CardItem>
+                                <CardItem header>
+                                    <Text
+                                        style={this.style.thread_entry_meta}>
+                                        {rowData.num_comments} comments
+                                    </Text>
+                                </CardItem>
+                            </Card>
+                        </Interactable.View>
                     )}
                 />
             </View>
