@@ -42,17 +42,17 @@ export function subredditChanged(subreddit) {
 export function subredditListFetchData(url) {
     return (dispatch) => {
         dispatch(subredditListIsLoading(true));
-
-        axios.get(url)
+        console.log("Subreddit fetch");
+        fetch(url)
             .then((response) => {
-                if (response.status !== 200) {
-                    throw Error(response.statusText);
+                if (!response.ok) {
+                    throw Error(response);
                 }
 
                 dispatch(subredditListIsLoading(false));
-                return response;
+                return response.json();
             })
-            .then((response) => response.data.data.children.map(obj => obj.data))
+            .then((response) => response.data.children.map(obj => obj.data))
             .then((transformed) => dispatch(subreddits(transformed)))
             .catch((ex) => {
                 console.error("Exception fetching subreddits", ex);

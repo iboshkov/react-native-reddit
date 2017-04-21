@@ -7,12 +7,15 @@
     "test": "jest"
   },
   "dependencies": {
+    "@expo/vector-icons": "^4.0.0",
     "axios": "^0.16.1",
     "global": "^4.3.2",
+    "native-base": "^2.1.2",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.43.3",
     "react-native-cli": "^2.0.1",
     "react-native-drawer": "^2.3.0",
+    "react-native-interactable": "^0.0.8",
     "react-native-side-menu": "^0.20.1",
     "react-native-sidebar": "^0.3.0",
     "react-redux": "^5.0.4",

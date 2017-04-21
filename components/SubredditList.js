@@ -4,7 +4,6 @@ import * as SubredditActions from '../actions/subreddit_list';
 import {
     AppRegistry,
     StyleSheet,
-    Text,
     View,
     Button,
     ListView,
@@ -14,6 +13,7 @@ import {
     ActivityIndicator,
     FlatList
 } from 'react-native';
+import { Container, Content, List, ListItem, Text } from 'native-base';
 
 class SubredditList extends Component {
     componentDidMount() {
@@ -40,19 +40,19 @@ class SubredditList extends Component {
         }
 
         return (
-            <View>
-
-                <FlatList
-                    data={this.props.items}
-                    renderItem={({ item }) => (
-                        <Text style={styles.picker_item} key={item.id} onPress={() => this.subredditSelected(item.url)} title={item.display_name} value={item.url}>
-                            {item.display_name}
-                        </Text>
-                    )}
-                />
-            </View>
+            <ScrollView>
+                <List>
+                    {this.props.items.map(item => (
+                        <ListItem
+                            onPress={() => this.subredditSelected(item.url)}
+                            key={item.id}>
+                            <Text>{item.display_name}</Text>
+                        </ListItem>
+                    ))}
+                </List>
+            </ScrollView>
         );
-        
+
         return (
             <ScrollView
                 ref={(ref) => this._drawer = ref}
@@ -70,7 +70,6 @@ class SubredditList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log("STATE", state);
     let placeholder_post = {
         id: 0,
         url: null,
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
         padding: 8,
     },
     gray: {
-        backgroundColor: '#cccccc',
+        backgroundColor: '#DDDDDD'
     },
     horizontal: {
         flexDirection: 'row',

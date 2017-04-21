@@ -44,20 +44,22 @@ export function threadListFetchData(url) {
     return (dispatch) => {
         dispatch(threadListIsLoading(true));
         console.log(`Fetching threads from ${url}`)
-        axios.get(url)
+        fetch(url)
             .then((response) => {
-                if (response.status !== 200) {
+                if (!response.ok) {
                     throw Error(response.statusText);
                 }
 
                 dispatch(threadListIsLoading(false));
-                return response;
+                return response.json();
             })
-            .then((response) => response.data.data.children.map(obj => obj.data))
+            .then((response) => response.data.children.map(obj => obj.data))
             .then((transformed) => dispatch(threads(transformed)))
             .catch((ex) => {
                 console.error("Exception fetching threads", ex);
                 dispatch(threadListHasErrored(true));
             });
+        console.log(`After fetch from ${url}`)
+
     };
 }

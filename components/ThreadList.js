@@ -4,7 +4,6 @@ import * as ThreadListActions from '../actions/thread_list';
 import {
     AppRegistry,
     StyleSheet,
-    Text,
     View,
     Button,
     ListView,
@@ -12,6 +11,8 @@ import {
     ToastAndroid,
     ActivityIndicator
 } from 'react-native';
+import { Container, Content, Card, CardItem, Text, Body } from 'native-base';
+import Interactable from 'react-native-interactable';
 
 class ThreadList extends Component {
     constructor() {
@@ -19,12 +20,16 @@ class ThreadList extends Component {
 
         this.style = StyleSheet.create({
             thread_entry: {
-                backgroundColor: '#3F3E4E',
                 color: '#CCCCCC',
                 borderColor: '#F07B13',
                 borderWidth: 0,
                 borderBottomWidth: 1,
-                padding: 10
+            },
+            thread_view_background: {
+                color: '#CCCCCC',
+                borderColor: '#F07B13',
+                borderWidth: 0,
+                borderBottomWidth: 1,
             },
             thread_entry_title: {
                 color: '#CCCCCC',
@@ -38,19 +43,10 @@ class ThreadList extends Component {
             },
             thread_entry_meta: {
                 color: '#CCCCCC',
-                paddingLeft: 15,
             },
             centering: {
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: 8,
-            },
-            gray: {
-                backgroundColor: '#cccccc',
-            },
-            horizontal: {
-                flexDirection: 'row',
-                justifyContent: 'space-around',
                 padding: 8,
             },
         });
@@ -64,7 +60,10 @@ class ThreadList extends Component {
     }
 
     componentWillReceiveProps(props) {
-        console.log("PROPS: ", props);
+    }
+
+    onDrawerSnap() {
+        console.log("Snap");
     }
 
 
@@ -84,11 +83,94 @@ class ThreadList extends Component {
         // }
 
         return (
-            <View>
+            <Interactable.View
+                horizontalOnly={true}
+                snapPoints={[{ x: 0 }, { x: -200 }]}
+                onSnap={this.onDrawerSnap}>
+
+                <Card>
+                    <CardItem header>
+                        <Text>
+                            header
+                            </Text>
+                    </CardItem>
+
+                    <CardItem>
+                        <Body>
+
+                            <Text>
+                                Data
+                                </Text>
+
+                        </Body>
+                    </CardItem>
+                    <CardItem header>
+                        <Text>
+                            Footer
+                            </Text>
+                    </CardItem>
+                </Card>
+            </Interactable.View>
+        )
+
+        return (
+            <View
+                style={this.style.thread_view_background}
+            >
+                {this.props.isLoading ? (
+                    <ActivityIndicator
+                        animating={true}
+                        style={[this.style.centering, { height: 80 }]}
+                        size="large"
+                    />
+                ) : (
+                        <ListView
+                            dataSource={this.props.dataSource}
+                            renderRow={(rowData) => (
+                                <Interactable.View
+                                    horizontalOnly={true}
+                                    snapPoints={[{ x: 0 }, { x: -200 }]}
+                                    onSnap={this.onDrawerSnap}>
+
+                                    <Card>
+                                        <CardItem header>
+                                            <Text
+                                                style={this.style.thread_entry_header}>
+                                                Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.subreddit_name_prefixed}</Text>
+                                            </Text>
+                                        </CardItem>
+
+                                        <CardItem>
+                                            <Body>
+
+                                                <Text
+                                                    style={this.style.thread_entry_title}>
+                                                    {rowData.title}
+                                                </Text>
+
+                                            </Body>
+                                        </CardItem>
+                                        <CardItem header>
+                                            <Text
+                                                style={this.style.thread_entry_meta}>
+                                                {rowData.num_comments} comments
+                                    </Text>
+                                        </CardItem>
+                                    </Card>
+                                </Interactable.View>
+                            )}
+                        />
+                    )}
+            </View>
+        );
+        return (
+            <View
+                style={this.style.thread_view_background}
+            >
                 {this.props.isLoading && (
                     <ActivityIndicator
                         animating={true}
-                        style={[styles.centering, { height: 80 }]}
+                        style={[this.style.centering, { height: 80 }]}
                         size="large"
                     />
                 )}
@@ -98,7 +180,7 @@ class ThreadList extends Component {
                         <View
                             style={this.style.thread_entry}>
                             <Text
-                                style={this.style.thread_entry_header} Ï>
+                                style={this.style.thread_entry_header}>
                                 Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.domain}</Text>
                             </Text>
                             <Text
@@ -106,7 +188,7 @@ class ThreadList extends Component {
                                 {rowData.title}
                             </Text>
                             <Text
-                                style={this.style.thread_entry_meta} Ï>
+                                style={this.style.thread_entry_meta}>
                                 {console.log(rowData)}
                                 {rowData.num_comments} comments
                         </Text>
@@ -119,7 +201,6 @@ class ThreadList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log("STATE", state);
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
     return {
