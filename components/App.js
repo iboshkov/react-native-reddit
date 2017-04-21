@@ -39,6 +39,7 @@ class App extends Component {
             damping: 1 - 0.7,
             tension: 300,
             refreshing: false,
+            drawerOpen: false
         };
     }
 
@@ -59,12 +60,16 @@ class App extends Component {
             this.closeDrawer();
         }
     }
+
     closeDrawer = () => {
         this.drawer._root.close()
+        this.setState({ drawerOpen: false });
+    
     };
 
     openDrawer = () => {
-        this.drawer._root.open()
+        this.drawer._root.open();
+        this.setState({drawerOpen: true});
     };
 
     render() {
@@ -75,7 +80,7 @@ class App extends Component {
                 }}>
                     <Header>
                         <Left>
-                            <Button onPress={this.openDrawer} transparent>
+                            <Button onPress={this.state.drawerOpen ? this.closeDrawer : this.openDrawer} transparent>
                                 <Icon name='menu' />
                             </Button>
                         </Left>
