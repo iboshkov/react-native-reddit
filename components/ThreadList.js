@@ -83,37 +83,6 @@ class ThreadList extends Component {
         // }
 
         return (
-            <Interactable.View
-                horizontalOnly={true}
-                snapPoints={[{ x: 0 }, { x: -200 }]}
-                onSnap={this.onDrawerSnap}>
-
-                <Card>
-                    <CardItem header>
-                        <Text>
-                            header
-                            </Text>
-                    </CardItem>
-
-                    <CardItem>
-                        <Body>
-
-                            <Text>
-                                Data
-                                </Text>
-
-                        </Body>
-                    </CardItem>
-                    <CardItem header>
-                        <Text>
-                            Footer
-                            </Text>
-                    </CardItem>
-                </Card>
-            </Interactable.View>
-        )
-
-        return (
             <View
                 style={this.style.thread_view_background}
             >
