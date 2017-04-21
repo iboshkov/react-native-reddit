@@ -27,6 +27,8 @@ import getTheme from '../native-base-theme/components';
 import material from '../native-base-theme/variables/material';
 import Interactable from 'react-native-interactable';
 import { Card, CardItem } from 'native-base';
+import { RowActions1, Row } from './RowActions1';
+
 const Screen = Dimensions.get('window');
 
 class App extends Component {
@@ -94,7 +96,7 @@ class App extends Component {
                                 />}
                         >
 
-                            <ThreadList />
+                            <ThreadList refreshing={this.state.refreshing} />
                         </Content>
                     </Drawer>
                     <Footer>
@@ -138,21 +140,67 @@ const mapDispatchToProps = (dispatch) => {
         //subredditChanged: (url) => dispatch(SubredditActions.subredditChanged(url))
     };
 };
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'white'
     },
-    card: {
-        width: 300,
-        height: 180,
-        backgroundColor: 'red',
-        borderRadius: 8,
-        marginVertical: 6
+    rowContent: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderColor: '#eeeeee'
+    },
+    buttonIcon: {
+        fontSize: 40
+    },
+    rowIcon: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: '#73d4e3',
+        margin: 20,
+        fontSize: 40
+    },
+    rowTitle: {
+        fontWeight: 'bold',
+        fontSize: 20
+    },
+    rowSubtitle: {
+        fontSize: 18,
+        color: 'gray'
+    },
+    buttonRight: {
+        width: 40,
+        height: 40,
+        marginRight: 25,
+    },
+    buttonLeft: {
+        width: 40,
+        height: 40,
+        marginLeft: 25
+    },
+    playground: {
+        marginTop: Screen.height <= 500 ? 0 : 80,
+        padding: 20,
+        width: Screen.width - 40,
+        backgroundColor: '#5894f3',
+        alignItems: 'stretch',
+        alignSelf: 'center'
+    },
+    playgroundLabel: {
+        color: 'white',
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 15
+    },
+    slider: {
+        height: 40
     }
-
 });
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

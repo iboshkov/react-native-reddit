@@ -36,7 +36,10 @@ export function threadListReload(subreddit) {
             path = `${subreddit}`;
         }
         let url = `http://www.reddit.com/${path}.json`;
-        dispatch(threadListFetchData(url));
+        dispatch(threadListIsLoading(true));
+
+        setTimeout(() =>
+            dispatch(threadListFetchData(url)), 200);
     };
 }
 

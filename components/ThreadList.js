@@ -10,15 +10,29 @@ import {
     Picker,
     ToastAndroid,
     RefreshControl,
+    Dimensions,
     ActivityIndicator,
-    ScrollView
+    Animated,
+    ScrollView,
+    Easing
 } from 'react-native';
 import { Container, Content, Card, CardItem, Text, Body } from 'native-base';
 import Interactable from 'react-native-interactable';
+import { RowActions1, Row } from './RowActions1';
+import ThreadListEntry from './ThreadListEntry';
+
+const Screen = Dimensions.get('window');
 
 class ThreadList extends Component {
+
+
+
     constructor() {
         super();
+
+        this.deltaXMap = {};
+
+        this._deltaX = new Animated.Value(0);
 
         this.style = StyleSheet.create({
             thread_entry: {
@@ -51,11 +65,17 @@ class ThreadList extends Component {
                 justifyContent: 'center',
                 padding: 8,
             },
+            animated_card: {
+                left: -Screen.width,
+                position: 'absolute'
+            }
         });
-
+        this.state = {
+            damping: 1 - 0.7,
+            tension: 300,
+            animating: false,
+        };
     }
-
-
 
     componentDidMount() {
         console.log("Path", this.props.selectedSubreddit);
@@ -63,33 +83,20 @@ class ThreadList extends Component {
     }
 
     componentWillReceiveProps(props) {
-        this.setState({ refreshing: props.isLoading });
 
     }
 
     onDrawerSnap() {
         console.log("Snap");
     }
-
+    runInAnims() {
+    }
     render() {
         if (this.props.hasErrored) {
             return <Text>Sorry! There was an error loading the subreddits</Text>;
         }
 
-        // if (this.props.isLoading) {
-        //     return (
-        //         <ActivityIndicator
-        //             animating={true}
-        //             style={[this.style.centering, { height: 80 }]}
-        //             size="large"
-        //         />
-        //     );
-        // }
-
-        let a = [];
-        for (let i = 0; i < 100; i++) {
-            a.push({});
-        }
+        let anims = this.props.items.map((item, idx) => new Animated.Value(0));
 
         return (
             <View
@@ -98,41 +105,11 @@ class ThreadList extends Component {
 
                 <ListView
                     dataSource={this.props.dataSource}
-                    renderRow={(rowData) => (
-                        <Interactable.View
-                            horizontalOnly={true}
-                            snapPoints={[{ x: 0 }, { x: -200 }]}
-                            onSnap={this.onDrawerSnap}>
-
-                            <Card>
-                                <CardItem header>
-                                    <Text
-                                        style={this.style.thread_entry_header}>
-                                        Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{rowData.subreddit_name_prefixed}</Text>
-                                    </Text>
-                                </CardItem>
-
-                                <CardItem>
-                                    <Body>
-
-                                        <Text
-                                            style={this.style.thread_entry_title}>
-                                            {rowData.title}
-                                        </Text>
-
-                                    </Body>
-                                </CardItem>
-                                <CardItem header>
-                                    <Text
-                                        style={this.style.thread_entry_meta}>
-                                        {rowData.num_comments} comments
-                                    </Text>
-                                </CardItem>
-                            </Card>
-                        </Interactable.View>
+                    renderRow={(rowData, sectionID, rowID) => (
+                        <ThreadListEntry isLoading={this.props.refreshing} index={rowID} thread={rowData}></ThreadListEntry>
                     )}
                 />
-            </View>
+            </View >
         );
     }
 }
@@ -155,5 +132,6 @@ const mapDispatchToProps = (dispatch) => {
         //subredditChanged: (url) => dispatch(SubredditActions.subredditChanged(url))
     };
 };
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThreadList);
