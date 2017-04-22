@@ -120,7 +120,7 @@ class ThreadListEntry extends Component {
 
         return (
             <Animated.View
-                style={{
+                style={[{}, {
                     transform: [{
                         translateX: this.anim.interpolate(
                             {
@@ -128,22 +128,13 @@ class ThreadListEntry extends Component {
                                 outputRange: [-Screen.width, Screen.width]
                             })
                     }]
-                }}
+                }]}
             >
                 <Row damping={this.state.damping} tension={this.state.tension}>
-                    <Card>
+                    <Card onPress={() => alert("TEST")}>
                         <CardItem header>
-                            <Text
-                                style={this.style.thread_entry_header} onPress={() => {
-                                    {/*Animated.spring(this.delta(rowData.id), {
-                                                    toValue: 1.5,   // Returns to the start
-                                                    velocity: 1,  // Velocity makes it move
-                                                    tension: -10, // Slow
-                                                    friction: 1,  // Oscillate a lot
-                                                }).start();*/}
-
-                                }}>
-                                {this.props.isLoading ? 'true' : 'false'} Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{thread.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{thread.subreddit_name_prefixed}</Text>
+                            <Text>
+                                <Text style={{ fontWeight: 'bold' }}>{thread.score.toString()}</Text> Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{thread.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{thread.subreddit_name_prefixed}</Text>
                             </Text>
                         </CardItem>
 
@@ -160,7 +151,7 @@ class ThreadListEntry extends Component {
                         <CardItem header>
                             <Text
                                 style={this.style.thread_entry_meta}>
-                                {thread.num_comments} comments
+                                {thread.num_comments.toString()} comments
                                     </Text>
                         </CardItem>
                     </Card>

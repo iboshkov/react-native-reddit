@@ -22,9 +22,8 @@ import { Container, Header, StyleProvider, Text, Title, Content, Footer, FooterT
 const SideMenu = require('react-native-side-menu');
 
 import { Drawer } from 'native-base';
-import Sidebar from './Sidebar';
 import getTheme from '../native-base-theme/components';
-import material from '../native-base-theme/variables/material';
+import material from '../native-base-theme/variables/platform';
 import Interactable from 'react-native-interactable';
 import { Card, CardItem } from 'native-base';
 import { RowActions1, Row } from './RowActions1';
@@ -62,14 +61,16 @@ class App extends Component {
     }
 
     closeDrawer = () => {
-        this.drawer._root.close()
-        this.setState({ drawerOpen: false });
-    
+        //this.drawer._root.close()
+
     };
 
     openDrawer = () => {
-        this.drawer._root.open();
-        this.setState({drawerOpen: true});
+        //  this.drawer._root.open();
+    };
+
+    toggleDrawer = () => {
+        // this.drawer._root.toggle();
     };
 
     render() {
@@ -78,49 +79,16 @@ class App extends Component {
                 <Container style={{
                     backgroundColor: '#FFF'
                 }}>
-                    <Header>
-                        <Left>
-                            <Button onPress={this.state.drawerOpen ? this.closeDrawer : this.openDrawer} transparent>
-                                <Icon name='menu' />
-                            </Button>
-                        </Left>
-                        <Body>
-                            <Title>React Reddit</Title>
-                        </Body>
-                        <Right />
-                    </Header>
-                    <Drawer
-                        ref={(ref) => { this.drawer = ref; }}
-                        content={<Sidebar navigator={this.navigator} />}
+                    <Content
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.props.isLoading}
+                                onRefresh={this._onRefresh.bind(this)}
+                            />}
                     >
-                        <Content
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={this.props.isLoading}
-                                    onRefresh={this._onRefresh.bind(this)}
-                                />}
-                        >
 
-                            <ThreadList refreshing={this.state.refreshing} />
-                        </Content>
-                    </Drawer>
-                    <Footer>
-                        <FooterTab>
-                            <Button>
-                                <Text>Footer</Text>
-                            </Button>
-                        </FooterTab>
-                        <FooterTab>
-                            <Button>
-                                <Text>Footer</Text>
-                            </Button>
-                        </FooterTab>
-                        <FooterTab>
-                            <Button >
-                                <Text>Footer</Text>
-                            </Button>
-                        </FooterTab>
-                    </Footer>
+                        <ThreadList refreshing={this.state.refreshing} />
+                    </Content>
                 </Container>
             </StyleProvider>
         )

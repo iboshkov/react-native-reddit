@@ -133,8 +133,8 @@ export class Row extends Component {
                 </View>
 
                 <View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={this.onButtonPress.bind(this, 'done')}>
-                        <Animated.View source={require('../img/icon-check.png')} style={
+                    <TouchableOpacity onPress={this.onButtonPress.bind(this, 'upvote')}>
+                        <Animated.View style={
                             [styles.buttonLeft, {
                                 opacity: this._deltaX.interpolate({
                                     inputRange: [50, 90],
@@ -154,14 +154,35 @@ export class Row extends Component {
                             ]} >
                             <Icon style={{ fontSize: 40, color: 'black' }} name='arrow-up' />
                         </Animated.View>
-
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.onButtonPress.bind(this, 'downvote')}>
+                        <Animated.View style={
+                            [styles.buttonLeft, {
+                                opacity: this._deltaX.interpolate({
+                                    inputRange: [90, 155],
+                                    outputRange: [0, 1],
+                                    extrapolateLeft: 'clamp',
+                                    extrapolateRight: 'clamp'
+                                }),
+                                transform: [{
+                                    scale: this._deltaX.interpolate({
+                                        inputRange: [90, 155],
+                                        outputRange: [0.7, 1],
+                                        extrapolateLeft: 'clamp',
+                                        extrapolateRight: 'clamp'
+                                    })
+                                }]
+                            }
+                            ]} >
+                            <Icon style={{ fontSize: 40, color: 'black' }} name='arrow-down' />
+                        </Animated.View>
                     </TouchableOpacity>
                 </View>
 
                 <Interactable.View
                     horizontalOnly={true}
                     snapPoints={[
-                        { x: 90, damping: 1 - this.props.damping, tension: this.props.tension },
+                        { x: 155, damping: 1 - this.props.damping, tension: this.props.tension },
                         { x: 0, damping: 1 - this.props.damping, tension: this.props.tension },
                         { x: -155, damping: 1 - this.props.damping, tension: this.props.tension }
                     ]}

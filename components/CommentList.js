@@ -23,10 +23,7 @@ import ThreadListEntry from './ThreadListEntry';
 
 const Screen = Dimensions.get('window');
 
-class ThreadList extends Component {
-
-
-
+class CommentList extends Component {
     constructor() {
         super();
 
@@ -89,7 +86,8 @@ class ThreadList extends Component {
     onDrawerSnap() {
         console.log("Snap");
     }
-
+    runInAnims() {
+    }
     render() {
         if (this.props.hasErrored) {
             return <Text>Sorry! There was an error loading the subreddits</Text>;
@@ -117,20 +115,21 @@ const mapStateToProps = (state) => {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
     return {
-        items: state.threads || [],
-        dataSource: ds.cloneWithRows(state.threads || []),
-        hasErrored: state.threadListHasErrored,
+        items: state.comments || [],
+        dataSource: ds.cloneWithRows(state.comments || []),
+        hasErrored: state.commentListHasErrored,
         selectedSubreddit: state.selectedSubreddit,
-        isLoading: state.threadListIsLoading
+        selectedThread: state.selectedThread,
+        isLoading: state.commentListIsLoading
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        threadListReload: (subreddit) => dispatch(ThreadListActions.threadListReload(subreddit)),
+        commentListReload: (subreddit) => dispatch(ThreadListActions.threadListReload(subreddit)),
         //subredditChanged: (url) => dispatch(SubredditActions.subredditChanged(url))
     };
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadList);
+export default connect(mapStateToProps, mapDispatchToProps)(CommentList);

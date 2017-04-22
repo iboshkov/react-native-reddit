@@ -13,6 +13,12 @@ import {
     selectedThread
 } from './thread_list';
 
+import {
+    commentListHasErrored,
+    commentListIsLoading,
+    comments
+} from './comment_list';
+
 
 export default combineReducers({
     subredditListHasErrored,
@@ -24,5 +30,9 @@ export default combineReducers({
     threadListHasErrored,
     threadListIsLoading,
     threads,
-    selectedThread
+    selectedThread,
+
+    commentListHasErrored,
+    commentListIsLoading,
+    comments
 });

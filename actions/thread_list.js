@@ -21,10 +21,10 @@ export function threads(threads) {
     };
 }
 
-export function threadChanged(threads) {
+export function threadSelected(thread) {
     return {
         type: 'THREAD_LIST_SELECTED',
-        threads
+        thread
     };
 }
 

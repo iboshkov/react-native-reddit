@@ -108,7 +108,7 @@ export default {
 
 
   // Card
-  cardDefaultBg: 'red',
+  cardDefaultBg: 'white',
 
 
   // Color
