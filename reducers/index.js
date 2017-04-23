@@ -16,7 +16,8 @@ import {
 import {
     commentListHasErrored,
     commentListIsLoading,
-    comments
+    comments,
+    threadDetails
 } from './comment_list';
 
 
@@ -34,5 +35,6 @@ export default combineReducers({
 
     commentListHasErrored,
     commentListIsLoading,
-    comments
+    comments,
+    threadDetails
 });

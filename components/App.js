@@ -86,7 +86,6 @@ class App extends Component {
                                 onRefresh={this._onRefresh.bind(this)}
                             />}
                     >
-
                         <ThreadList refreshing={this.state.refreshing} />
                     </Content>
                 </Container>

@@ -31,3 +31,16 @@ export function comments(state = [], action) {
             return state;
     }
 }
+
+export function threadDetails(state = [], action) {
+    switch (action.type) {
+        case 'SET_THREAD_DETAILS':
+            {
+                console.log(action)
+                return action.thread;
+            }
+
+        default:
+            return state;
+    }
+}

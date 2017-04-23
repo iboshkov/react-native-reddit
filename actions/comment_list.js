@@ -21,6 +21,15 @@ export function comments(comments) {
     };
 }
 
+
+export function threadDetails(thread) {
+    return {
+        type: 'SET_THREAD_DETAILS',
+        thread
+    };
+}
+
+
 export function commentChangedAction(comment) {
     return {
         type: 'COMMENT_LIST_SELECTED',
@@ -36,7 +45,7 @@ export function commentListReload(thread) {
         if (thread) {
             path = `${thread}`;
         }
-        let url = `http://www.reddit.com/${path}.json`;
+        let url = `http://www.reddit.com${path}.json`;
         dispatch(commentListIsLoading(true));
 
         setTimeout(() =>
@@ -57,7 +66,12 @@ export function commentListFetchData(url) {
                 dispatch(commentListIsLoading(false));
                 return response.json();
             })
-            .then((response) => response.data.children.map(obj => obj.data))
+            .then((response) => { 
+                console.log(response);
+                console.log("That");
+                dispatch(threadDetails(response[0]))
+                return response[1].data.children
+            })
             .then((transformed) => dispatch(comments(transformed)))
             .catch((ex) => {
                 console.error("Exception fetching comments", ex);

@@ -36,29 +36,24 @@ class ThreadList extends Component {
 
         this.style = StyleSheet.create({
             thread_entry: {
-                color: '#CCCCCC',
                 borderColor: '#F07B13',
                 borderWidth: 0,
                 borderBottomWidth: 1,
             },
             thread_view_background: {
-                color: '#CCCCCC',
                 borderColor: '#F07B13',
                 borderWidth: 0,
                 borderBottomWidth: 1,
             },
             thread_entry_title: {
-                color: '#CCCCCC',
                 paddingBottom: 30,
                 fontWeight: 'bold'
             },
             thread_entry_header: {
-                color: '#CCCCCC',
                 paddingBottom: 5,
                 fontWeight: 'bold'
             },
             thread_entry_meta: {
-                color: '#CCCCCC',
             },
             centering: {
                 alignItems: 'center',
@@ -105,7 +100,7 @@ class ThreadList extends Component {
                 <ListView
                     dataSource={this.props.dataSource}
                     renderRow={(rowData, sectionID, rowID) => (
-                        <ThreadListEntry isLoading={this.props.refreshing} index={rowID} thread={rowData}></ThreadListEntry>
+                        <ThreadListEntry navigator={this.props.navigator} isLoading={this.props.refreshing} index={rowID} thread={rowData}></ThreadListEntry>
                     )}
                 />
             </View >

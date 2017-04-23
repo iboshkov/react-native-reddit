@@ -28,29 +28,24 @@ class ThreadListEntry extends Component {
 
         this.style = StyleSheet.create({
             thread_entry: {
-                color: '#CCCCCC',
                 borderColor: '#F07B13',
                 borderWidth: 0,
                 borderBottomWidth: 1,
             },
             thread_view_background: {
-                color: '#CCCCCC',
                 borderColor: '#F07B13',
                 borderWidth: 0,
                 borderBottomWidth: 1,
             },
             thread_entry_title: {
-                color: '#CCCCCC',
                 paddingBottom: 30,
                 fontWeight: 'bold'
             },
             thread_entry_header: {
-                color: '#CCCCCC',
                 paddingBottom: 5,
                 fontWeight: 'bold'
             },
             thread_entry_meta: {
-                color: '#CCCCCC',
             },
             centering: {
                 alignItems: 'center',
@@ -81,6 +76,7 @@ class ThreadListEntry extends Component {
             {
                 toValue: 0,        // Target
                 duration: 200,    // Configuration
+                useNativeDriver: true, // <-- Add this            
             },
         );
         let delay = Animated.delay(100 * this.props.index);
@@ -93,6 +89,7 @@ class ThreadListEntry extends Component {
             {
                 toValue: 1,        // Target
                 duration: 200,    // Configuration
+                useNativeDriver: true, // <-- Add this            
             },
         );
         let delay = Animated.delay(100 * this.props.index);
@@ -115,6 +112,17 @@ class ThreadListEntry extends Component {
 
     }
 
+    goToComments(url) {
+        if (this.props.selectedThread != url) {
+            this.props.threadSelected(url);
+        }
+
+        this.props.navigator.push({
+            screen: 'CommentsScreen', // unique ID registered with Navigation.registerScreen
+            passProps: { thread: this.props.thread }, // Object that will be passed as props to the pushed screen (optional)
+        });
+    }
+
     render() {
         let thread = this.props.thread;
 
@@ -131,14 +139,14 @@ class ThreadListEntry extends Component {
                 }]}
             >
                 <Row damping={this.state.damping} tension={this.state.tension}>
-                    <Card onPress={() => alert("TEST")}>
+                    <Card>
                         <CardItem header>
                             <Text>
                                 <Text style={{ fontWeight: 'bold' }}>{thread.score.toString()}</Text> Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{thread.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{thread.subreddit_name_prefixed}</Text>
                             </Text>
                         </CardItem>
 
-                        <CardItem>
+                        <CardItem >
                             <Body>
 
                                 <Text
@@ -148,7 +156,7 @@ class ThreadListEntry extends Component {
 
                             </Body>
                         </CardItem>
-                        <CardItem header>
+                        <CardItem button onPress={() => this.goToComments(thread.permalink)}>
                             <Text
                                 style={this.style.thread_entry_meta}>
                                 {thread.num_comments.toString()} comments
@@ -161,4 +169,22 @@ class ThreadListEntry extends Component {
     }
 }
 
-export default ThreadListEntry;
+const mapStateToProps = (state) => {
+
+    return {
+        items: state.threads || [],
+        hasErrored: state.threadListHasErrored,
+        selectedSubreddit: state.selectedSubreddit,
+        selectedThread: state.selectedThread,
+        isLoading: state.threadListIsLoading
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        threadListReload: (subreddit) => dispatch(ThreadListActions.threadListReload(subreddit)),
+        threadSelected: (url) => dispatch(ThreadListActions.threadSelected(url))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThreadListEntry);

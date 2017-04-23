@@ -110,13 +110,11 @@ const styles = StyleSheet.create({
         padding: 8,
     },
     picker: {
-        color: '#CCCCCC',
         borderColor: '#F07B13',
         borderWidth: 0,
         borderBottomWidth: 1,
     },
     picker_item: {
-        color: '#CCCCCC',
         marginBottom: 30
     }
 });
