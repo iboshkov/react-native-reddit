@@ -5,7 +5,6 @@ import {
     AppRegistry,
     StyleSheet,
     View,
-    Button,
     ListView,
     Picker,
     ToastAndroid,
@@ -16,10 +15,13 @@ import {
     ScrollView,
     Easing
 } from 'react-native';
-import { Container, Content, Card, CardItem, Text, Body } from 'native-base';
+import { Container, Content, Card, Left, Icon, Button, Thumbnail, CardItem, Text, Body } from 'native-base';
 import Interactable from 'react-native-interactable';
 import { RowActions1, Row } from './RowActions1';
 const Screen = Dimensions.get('window');
+import { AllHtmlEntities } from 'html-entities';
+
+const entities = new AllHtmlEntities();
 
 class ThreadListEntry extends Component {
 
@@ -113,18 +115,27 @@ class ThreadListEntry extends Component {
     }
 
     goToComments(url) {
-        if (this.props.selectedThread != url) {
-            this.props.threadSelected(url);
+        if (this.props.selectedThread != this.props.thread.permalink) {
+            this.props.threadSelected(this.props.thread);
         }
 
-        this.props.navigator.push({
-            screen: 'CommentsScreen', // unique ID registered with Navigation.registerScreen
-            passProps: { thread: this.props.thread }, // Object that will be passed as props to the pushed screen (optional)
+        // this.props.navigator.push({
+        //     screen: 'CommentsScreen',
+        //     passProps: { thread: this.props.thread },
+        // });
+        this.props.navigator.switchToTab({
+            tabIndex: 1 // (optional) if missing, this screen's tab will become selected
         });
     }
 
     render() {
         let thread = this.props.thread;
+
+        let preview = null;
+
+        if (thread.preview) {
+            preview = entities.decode(thread.preview.images[0].source.url);
+        }
 
         return (
             <Animated.View
@@ -140,27 +151,28 @@ class ThreadListEntry extends Component {
             >
                 <Row damping={this.state.damping} tension={this.state.tension}>
                     <Card>
-                        <CardItem header>
-                            <Text>
-                                <Text style={{ fontWeight: 'bold' }}>{thread.score.toString()}</Text> Posted by: <Text style={{ color: 'red', fontWeight: 'bold' }}>{thread.author}</Text> in <Text style={{ color: 'red', fontWeight: 'bold' }}>{thread.subreddit_name_prefixed}</Text>
-                            </Text>
-                        </CardItem>
-
-                        <CardItem >
-                            <Body>
-
-                                <Text
-                                    style={this.style.thread_entry_title}>
-                                    {thread.title}
-                                </Text>
-
-                            </Body>
+                        <CardItem>
+                            <Left>
+                                {preview && (
+                                    <Thumbnail source={{ 'uri': preview }} />
+                                )}
+                                <Body>
+                                    <Text><Text style={{ fontWeight: 'bold' }}>{thread.score.toString()}</Text> {thread.title}</Text>
+                                    <Text note>by: /u/{thread.author}</Text>
+                                    <Text note>in <Text style={{ fontWeight: 'bold' }}>/{thread.subreddit_name_prefixed}</Text></Text>
+                                    <Text note>11h ago</Text>
+                                </Body>
+                            </Left>
                         </CardItem>
                         <CardItem button onPress={() => this.goToComments(thread.permalink)}>
-                            <Text
-                                style={this.style.thread_entry_meta}>
-                                {thread.num_comments.toString()} comments
-                                    </Text>
+                            <Button transparent>
+                                <Icon active name="arrow-up" />
+                                <Text>{thread.ups.toString()}</Text>
+                            </Button>
+                            <Button transparent>
+                                <Icon active name="chatbubbles" />
+                                <Text>{thread.num_comments.toString()}</Text>
+                            </Button>
                         </CardItem>
                     </Card>
                 </Row>
@@ -183,7 +195,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         threadListReload: (subreddit) => dispatch(ThreadListActions.threadListReload(subreddit)),
-        threadSelected: (url) => dispatch(ThreadListActions.threadSelected(url))
+        threadSelected: (thread) => dispatch(ThreadListActions.threadSelected(thread))
     };
 };
 

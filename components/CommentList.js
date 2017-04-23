@@ -30,7 +30,6 @@ class CommentList extends Component {
     }
 
     componentDidMount() {
-        this.props.commentListReload(this.props.selectedThread);
     }
 
     componentWillReceiveProps(props) {

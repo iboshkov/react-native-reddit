@@ -17,16 +17,22 @@ import {
     Dimensions,
     RefreshControl,
     Animated,
+    BackAndroid,
     Slider
-
 } from 'react-native';
 import getTheme from '../native-base-theme/components';
 import material from '../native-base-theme/variables/platform';
 import CommentList from '../components/CommentList'
 import * as CommentListActions from '../actions/comment_list';
-
+import * as ThreadListActions from '../actions/thread_list';
 import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, StyleProvider } from 'native-base';
+import { AllHtmlEntities } from 'html-entities';
 
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+
+
+const entities = new AllHtmlEntities();
 
 class CommentsScreen extends BaseScreen {
     constructor(props) {
@@ -37,19 +43,89 @@ class CommentsScreen extends BaseScreen {
             refreshing: false,
             drawerOpen: false
         };
+
+        this.isActiveScreen = false;
+
+        BackAndroid.addEventListener('hardwareBackPress', () => {
+            // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
+            // Typically you would use the navigator here to go to the last state.
+            if (!this.isActiveScreen) return false;
+
+            this.props.navigator.switchToTab({
+                tabIndex: 0 // (optional) if missing, this screen's tab will become selected
+            });
+            return true;
+        });
+        this.icons = {};
+
+
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     componentDidMount() {
+        if (this.props.selectedThread && this.props.comments.length == 0) {
+            this.props.commentListReload(this.props.selectedThread.permalink);
+        }
 
+
+
+        FAIcon.getImageSource('list-alt', 20, 'white')
+            .then(source => this.icons['subreddit_list'] = source)
+            .then(() => MaterialIcon.getImageSource('arrow-up', 20, 'white'))
+            .then(source => this.icons['upvote'] = source)
+            .then(() => MaterialIcon.getImageSource('arrow-down', 20, 'white'))
+            .then(source => this.icons['downvote'] = source)
+            .then(() => {
+                alert("All done ?");
+                console.log(this.icons);
+                this.props.navigator.setButtons({
+                    leftButtons: [
+                        { id: 'upvote', icon: this.icons['upvote'] },
+                        { id: 'downvote', icon: this.icons['downvote'] }
+                    ]
+                });
+            });
     }
+
+    onNavigatorEvent(event) {
+        switch (event.id) {
+            case 'willAppear': {
+                if (this.props.selectedThread) {
+                    this.props.commentListReload(this.props.selectedThread.permalink);
+                }
+            }
+                break;
+            case 'didAppear':
+                this.props.navigator.setButtons({
+                    rightButtons: [
+                        { id: 'upvote1', icon: this.icons['upvote'] },
+                        { id: 'downvo1te', icon: this.icons['downvote'] }
+                    ]
+                });
+                this.isActiveScreen = true;
+                break;
+            case 'willDisappear':
+                break;
+            case 'didDisappear':
+                this.isActiveScreen = false;
+                break;
+        }
+    }
+
 
     _onRefresh() {
         this.setState({ refreshing: true });
-        this.props.commentListReload(this.props.selectedThread);
+        this.props.commentListReload(this.props.selectedThread.permalink);
     }
 
     render() {
-        let thread = this.props.thread;
+        let thread = this.props.selectedThread;
+        if (!thread) {
+            return (<Text>No thread</Text>)
+        }
+
+        let preview = entities.decode(thread.preview.images[0].source.url);
+
 
         return (
             <StyleProvider style={getTheme(material)}>
@@ -68,7 +144,7 @@ class CommentsScreen extends BaseScreen {
                             <CardItem>
                                 <Left>
                                     {thread.preview && (
-                                        <Thumbnail source={{ 'uri': thread.preview.images[0].source.url }} />
+                                        <Thumbnail source={{ 'uri': preview }} />
                                     )}
                                     <Body>
                                         <Text>{thread.title}</Text>
@@ -94,8 +170,9 @@ class CommentsScreen extends BaseScreen {
                                 </Button>
                             </CardItem>
                         </Card>
-
-                        <CommentList navigator={this.props.navigator} refreshing={this.state.refreshing} />
+                        {this.props.isLoading ? (<ActivityIndicator />) : (
+                            <CommentList navigator={this.props.navigator} refreshing={this.state.refreshing} />
+                        )}
                     </Content>
                 </Container>
             </StyleProvider>
@@ -106,19 +183,20 @@ class CommentsScreen extends BaseScreen {
 const mapStateToProps = (state) => {
 
     return {
+        comments: state.comments || [],
         items: state.threads || [],
         threadDetails: state.threadDetails,
         hasErrored: state.threadListHasErrored,
         selectedSubreddit: state.selectedSubreddit,
         selectedThread: state.selectedThread,
-        isLoading: state.commentListIsLoading
+        isLoading: state.commentListIsLoading,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         commentListReload: (subreddit) => dispatch(CommentListActions.commentListReload(subreddit)),
-        //subredditChanged: (url) => dispatch(SubredditActions.subredditChanged(url))
+        threadSelected: (url) => dispatch(ThreadListActions.threadSelected(url))
     };
 };
 

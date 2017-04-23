@@ -59,7 +59,7 @@ class CommentListEntry extends Component {
                 position: 'absolute'
             }
         });
-        this.anim = new Animated.Value(-1);
+        this.anim = new Animated.Value(0);
         this.collapseAnim = new Animated.Value(1);
 
         this.state = {
@@ -72,7 +72,7 @@ class CommentListEntry extends Component {
     }
 
     componentDidMount() {
-        this.startInAnim();
+        //this.startInAnim();
     }
 
     startInAnim(callback) {
@@ -118,14 +118,14 @@ class CommentListEntry extends Component {
     }
 
     collapse() {
-        this.setState({collapsed: !this.state.collapsed});
+        this.setState({ collapsed: !this.state.collapsed });
     }
 
     render() {
         let raw = this.props.comment;
         let comment = raw.data;
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-        
+
         let children = [];
         if (comment.replies && comment.replies !== '') {
             children = comment.replies.data.children;
@@ -156,23 +156,23 @@ class CommentListEntry extends Component {
                     }]}
                 >
                     <Row damping={this.state.damping} tension={this.state.tension}>
-                                <ListItem onPress={() => this.collapse()} style={levelStyle}>
-                                    <Body >
-                                        <Text>
-                                            {this.state.collapsed && '[collapsed]'} <Text style={{ color: 'red', fontWeight: 'bold' }}>{comment.author}</Text> <Text style={{ fontWeight: 'bold' }}>{comment.ups.toString()} points</Text>
-                                        </Text>
-                                        {!this.state.collapsed && (
-                                            <Text
-                                                onPress={() => this.collapse()}
-                                                style={{
-                                                    padding: 10
-                                                }}
-                                                note>
-                                                {comment.body}
-                                            </Text>                                        )}
-                                    </Body>
-                                        
-                                </ListItem>
+                        <ListItem onPress={() => this.collapse()} style={levelStyle}>
+                            <Body >
+                                <Text>
+                                    {this.state.collapsed && '[collapsed]'} <Text style={{ color: 'red', fontWeight: 'bold' }}>{comment.author}</Text> <Text style={{ fontWeight: 'bold' }}>{comment.ups.toString()} points</Text>
+                                </Text>
+                                {!this.state.collapsed && (
+                                    <Text
+                                        onPress={() => this.collapse()}
+                                        style={{
+                                            padding: 10
+                                        }}
+                                        note>
+                                        {comment.body}
+                                    </Text>)}
+                            </Body>
+
+                        </ListItem>
                     </Row>
                 </Animated.View>
                 {!this.state.collapsed && children.map((child, index) => (
