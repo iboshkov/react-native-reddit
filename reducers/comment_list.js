@@ -23,7 +23,7 @@ export function comments(state = [], action) {
     switch (action.type) {
         case 'COMMENT_LIST_LOADED':
             {
-                console.log(action)
+                //console.log(action)
                 return action.comments;
             }
 
@@ -36,7 +36,7 @@ export function threadDetails(state = [], action) {
     switch (action.type) {
         case 'SET_THREAD_DETAILS':
             {
-                console.log(action)
+                //console.log(action)
                 return action.thread;
             }
 

@@ -28,20 +28,20 @@ export default function run() {
             Navigation.startTabBasedApp({
                 tabs: [
                     {
-                        label: 'One', // tab label as appears under the icon in iOS (optional)
+                        label: 'Subreddit', // tab label as appears under the icon in iOS (optional)
                         screen: 'ThreadsScreen', // this is a registered name for a screen
                         icon: icons["menu"], // local image asset for the tab icon unselected state (optional on iOS)
                         selectedIcon: icons["menu"], // local image asset for the tab icon selected state (optional, iOS only. On Android, Use `tabBarSelectedButtonColor` instead)
-                        title: 'Screen One', // title of the screen as appears in the nav bar (optional)
+                        title: 'Frontpage', // title of the screen as appears in the nav bar (optional)
                         navigatorStyle: {}, // override the navigator style for the tab screen, see "Styling the navigator" below (optional),
                         navigatorButtons: {} // override the nav buttons for the tab screen, see "Adding buttons to the navigator" below (optional)
                     },
                     {
-                        label: 'Two',
+                        label: 'Thread',
                         screen: 'CommentsScreen', // this is a registered name for a screen
                         icon: icons["menu"],
                         selectedIcon: icons["menu"],
-                        title: 'Screen Two'
+                        title: 'Comments'
                     }
                 ],
                 drawer: { // optional, add this if you want a side menu drawer in your app

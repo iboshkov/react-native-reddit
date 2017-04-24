@@ -11,12 +11,14 @@ export default class BaseScreen extends Component {
     constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+
+    }
+    componentDidMount() {
         this.props.navigator.toggleTabs({
             to: 'hidden', // required, 'hidden' = hide tab bar, 'shown' = show tab bar
             animated: false // does the toggle have transition animation or does it happen immediately (optional)
         });
     }
-
     onNavigatorEvent(event) {
         switch (event.id) {
             case 'sideMenu':

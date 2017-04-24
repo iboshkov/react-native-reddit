@@ -67,7 +67,7 @@ export function commentListFetchData(url) {
                 return response.json();
             })
             .then((response) => { 
-                console.log(response);
+                //console.log(response);
                 console.log("That");
                 dispatch(threadDetails(response[0]))
                 return response[1].data.children

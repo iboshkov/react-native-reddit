@@ -23,7 +23,7 @@ export function threads(state = [], action) {
     switch (action.type) {
         case 'THREAD_LIST_LOADED':
             {
-                console.log(action)
+                //console.log(action)
                 return action.threads;
             }
 

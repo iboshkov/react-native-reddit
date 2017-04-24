@@ -29,7 +29,7 @@ import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left
 import { AllHtmlEntities } from 'html-entities';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 const entities = new AllHtmlEntities();
@@ -50,16 +50,18 @@ class CommentsScreen extends BaseScreen {
             // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
             // Typically you would use the navigator here to go to the last state.
             if (!this.isActiveScreen) return false;
-
-            this.props.navigator.switchToTab({
-                tabIndex: 0 // (optional) if missing, this screen's tab will become selected
-            });
+            this.goBack();
             return true;
         });
         this.icons = {};
 
-
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    goBack() {
+        this.props.navigator.switchToTab({
+            tabIndex: 0 // (optional) if missing, this screen's tab will become selected
+        });
     }
 
     componentDidMount() {
@@ -67,19 +69,18 @@ class CommentsScreen extends BaseScreen {
             this.props.commentListReload(this.props.selectedThread.permalink);
         }
 
-
-
         FAIcon.getImageSource('list-alt', 20, 'white')
             .then(source => this.icons['subreddit_list'] = source)
             .then(() => MaterialIcon.getImageSource('arrow-up', 20, 'white'))
             .then(source => this.icons['upvote'] = source)
             .then(() => MaterialIcon.getImageSource('arrow-down', 20, 'white'))
             .then(source => this.icons['downvote'] = source)
+            .then(() => MaterialIcon.getImageSource('arrow-left', 20, 'white'))
+            .then(source => this.icons['back'] = source)
             .then(() => {
-                alert("All done ?");
-                console.log(this.icons);
                 this.props.navigator.setButtons({
                     leftButtons: [
+                        { id: 'back', icon: this.icons['back'] },
                         { id: 'upvote', icon: this.icons['upvote'] },
                         { id: 'downvote', icon: this.icons['downvote'] }
                     ]
@@ -89,6 +90,9 @@ class CommentsScreen extends BaseScreen {
 
     onNavigatorEvent(event) {
         switch (event.id) {
+            case 'back':
+                this.goBack();
+                break;
             case 'willAppear': {
                 if (this.props.selectedThread) {
                     this.props.commentListReload(this.props.selectedThread.permalink);
@@ -96,12 +100,6 @@ class CommentsScreen extends BaseScreen {
             }
                 break;
             case 'didAppear':
-                this.props.navigator.setButtons({
-                    rightButtons: [
-                        { id: 'upvote1', icon: this.icons['upvote'] },
-                        { id: 'downvo1te', icon: this.icons['downvote'] }
-                    ]
-                });
                 this.isActiveScreen = true;
                 break;
             case 'willDisappear':

@@ -23,7 +23,7 @@ export function subreddits(state = [], action) {
     switch (action.type) {
         case 'SUBREDDIT_LIST_LOADED':
             {
-                console.log(action)
+                //console.log(action)
                 return action.subreddits;
             }
 

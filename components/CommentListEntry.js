@@ -124,23 +124,24 @@ class CommentListEntry extends Component {
     render() {
         let raw = this.props.comment;
         let comment = raw.data;
-        const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
         let children = [];
         if (comment.replies && comment.replies !== '') {
             children = comment.replies.data.children;
         }
-        let childrenDataSource = ds.cloneWithRows(children);
-        let levelStyle = {
+
+        const levelStyle = {
             marginLeft: 20 * comment.depth,
             borderLeftWidth: 3,
             borderLeftColor: colorDepth[comment.depth]
         };
+
         if (raw.kind === 'more') {
             return (
                 <Text style={levelStyle}>Read {comment.count} more comments</Text>
             );
         }
+
         return (
             <TouchableOpacity >
 
@@ -175,9 +176,13 @@ class CommentListEntry extends Component {
                         </ListItem>
                     </Row>
                 </Animated.View>
-                {!this.state.collapsed && children.map((child, index) => (
-                    <CommentListEntry navigator={this.props.navigator} isLoading={this.props.isLoading} index={index} comment={child}></CommentListEntry>
-                ))}
+                <View>
+
+                    {!this.state.collapsed && children.map((child, index) => (
+                        <CommentListEntry navigator={this.props.navigator} isLoading={this.props.isLoading} index={index} comment={child}></CommentListEntry>
+                    ))}
+                </View>
+
             </TouchableOpacity>
         );
     }
